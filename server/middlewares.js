@@ -1,8 +1,14 @@
 const morgan = require('morgan');
+const { v4: uuid } = require('uuid');
 
 const logger = require('../logger');
 
 const { logErrorOnRequest } = require('./logger');
+
+const reqIdSetter = (req, _, next) => {
+  req.id = uuid();
+  next();
+};
 
 morgan.token('id', (req) => req.id);
 const reqLogger = morgan(
@@ -39,4 +45,4 @@ const errorHandlers = [
   errorHandlerMiddleware,
 ];
 
-module.exports = { reqLogger, errorHandlers };
+module.exports = { reqIdSetter, reqLogger, errorHandlers };
