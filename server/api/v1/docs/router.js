@@ -4,7 +4,7 @@ const swaggerUi = require('swagger-ui-express');
 const { port } = require('../../../../config');
 const { authPaths } = require('../auth/docs');
 const { healthPaths, healthSchemas, healthTag } = require('../health/docs');
-const { usersSchemas } = require('../users/docs');
+const { usersSchemas } = require('../users');
 
 const openApiDoc = {
   openapi: '3.0.0',
