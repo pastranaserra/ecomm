@@ -25,6 +25,10 @@ const explicitFields = {
       message: () => 'Invalid email',
     },
   },
+  isAdmin: {
+    type: Boolean,
+    default: false,
+  },
 };
 
 const userSchema = new mongoose.Schema(explicitFields, { timestamps: true });
