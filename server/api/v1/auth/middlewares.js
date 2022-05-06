@@ -7,10 +7,9 @@ const { User } = require('../users');
 
 const bearerPrefix = 'Bearer ';
 
-const unauthorizedResponse = { statusCode: 401, message: 'Unauthorized' };
-
 exports.me = async (req, _, next) => {
   try {
+    const unauthorizedResponse = { statusCode: 401, message: 'Unauthorized' };
     const { headers = {} } = req;
     const authHeader = headers.authorization;
     if (!authHeader) return next(unauthorizedResponse);
@@ -22,7 +21,7 @@ exports.me = async (req, _, next) => {
     if (!me) return next(unauthorizedResponse);
     req.me = me;
     return next();
-  } catch (error) {
-    return next(unauthorizedResponse);
+  } catch (err) {
+    return next(err);
   }
 };
