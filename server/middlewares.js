@@ -1,6 +1,14 @@
+const morgan = require('morgan');
+
 const logger = require('../logger');
 
 const { logErrorOnRequest } = require('./logger');
+
+morgan.token('id', (req) => req.id);
+const reqLogger = morgan(
+  ':remote-addr [:date[iso]] :id - ":method :url" - :status',
+  { stream: { write: (message) => logger.info(message.trim()) } },
+);
 
 const notFoundMiddleware = (_, __, next) => {
   next({ statusCode: 404, message: 'Not Found' });
@@ -31,4 +39,4 @@ const errorHandlers = [
   errorHandlerMiddleware,
 ];
 
-module.exports = { errorHandlers };
+module.exports = { reqLogger, errorHandlers };
