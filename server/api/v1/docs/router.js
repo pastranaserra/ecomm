@@ -2,6 +2,7 @@ const express = require('express');
 const swaggerUi = require('swagger-ui-express');
 
 const { port } = require('../../../../config');
+const { healthPaths, healthSchemas, healthTag } = require('../health/docs');
 
 const openApiDoc = {
   openapi: '3.0.0',
@@ -15,6 +16,15 @@ const openApiDoc = {
       url: `http://localhost:${port}/api/v1`,
     },
   ],
+  tags: [healthTag],
+  paths: {
+    ...healthPaths,
+  },
+  components: {
+    schemas: {
+      ...healthSchemas,
+    },
+  },
 };
 
 const router = express.Router();
