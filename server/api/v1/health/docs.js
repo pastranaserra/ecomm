@@ -3,10 +3,15 @@ const {
   simpleOkResBodyDoc,
 } = require('../docs/res-bodies');
 
+exports.healthTag = {
+  name: 'health',
+  description: 'Server health utilities.',
+};
+
 exports.healthPaths = {
   '/health': {
     get: {
-      tags: ['health'],
+      tags: [this.healthTag.name],
       summary: 'Check server health.',
       description: 'Check server availability and health.',
       operationId: '/health',
