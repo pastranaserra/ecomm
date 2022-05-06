@@ -15,7 +15,7 @@ exports.signUp = async (req, res, next) => {
   }
 };
 
-exports.signIn = async (req, res, next) => {
+exports.logIn = async (req, res, next) => {
   try {
     const invalidCredsError = {
       statusCode: 401,
