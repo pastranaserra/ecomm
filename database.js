@@ -18,11 +18,14 @@ exports.connect = ({
   username = '',
   password = '',
 }) => {
-  const connectionString = (() => {
-    if (!username || !password) return `${protocol}://${url}`;
-    return `${protocol}://${username}:${password}@${url}`;
-  })();
-  mongoose.connect(connectionString);
+  let dbUrl = '';
+
+  if (!username || !password) {
+    dbUrl = `${protocol}://${url}`;
+  } else {
+    dbUrl = `${protocol}://${username}:${password}@${url}`;
+  }
+  mongoose.connect(dbUrl);
 };
 
 exports.disconnect = () => {
