@@ -18,5 +18,8 @@
   "bugs": {
     "url": "https://github.com/pastranaserra/ecomm/issues"
   },
-  "homepage": "https://github.com/pastranaserra/ecomm#readme"
+  "homepage": "https://github.com/pastranaserra/ecomm#readme",
+  "dependencies": {
+    "dotenv": "^16.0.0"
+  }
 }
