@@ -43,16 +43,19 @@ exports.authPaths = {
       ),
       responses: {
         ...createdResBodyDoc('User logged in.', {
-          type: 'object',
-          properties: {
-            user: {
-              $ref: '#/components/schemas/User',
+          allOf: [
+            { $ref: '#/components/schemas/User' },
+            {
+              type: 'object',
+              properties: {
+                jwt: {
+                  type: 'string',
+                  format: 'JWT',
+                },
+              },
+              required: ['jwt'],
             },
-            jwt: {
-              type: 'string',
-              format: 'JWT',
-            },
-          },
+          ],
         }),
         ...simpleUnauthorizedResBodyDoc('Invalid credentials.'),
         ...fallbackInternalServerErrorResBodyDoc,
