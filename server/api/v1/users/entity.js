@@ -1,8 +1,11 @@
+const { hash } = require('bcryptjs');
 const mongoose = require('mongoose');
 const { isEmail } = require('validator');
 
+const passwordFieldName = 'password';
+
 const hiddenFields = {
-  password: {
+  [passwordFieldName]: {
     type: String,
     required: true,
   },
@@ -48,6 +51,14 @@ userSchema.methods.toJSON = function () {
   hiddenFieldNames.forEach((fieldName) => delete userJson[fieldName]);
   return userJson;
 };
+
+// eslint-disable-next-line func-names
+userSchema.pre('save', async function (next) {
+  if (this.isNew || this.isModified(passwordFieldName)) {
+    this.password = await hash(this.password, 10);
+  }
+  next();
+});
 
 module.exports = {
   User: mongoose.model('User', userSchema),
