@@ -24,8 +24,7 @@ exports.paginator = (req, _, next) => {
     const invalidOffsetMsg = offsetIsValid
       ? ''
       : ' `offset` must be an integer greater than or equal to 0.';
-    // TODO: Return to avoid following middlewares.
-    next(
+    return next(
       BadRequestErrorResponse(
         `${baseErrorMsg}${invalidLimitMsg}${invalidOffsetMsg}`,
       ),
@@ -33,7 +32,7 @@ exports.paginator = (req, _, next) => {
   }
   req.limit = Math.min(limit, maxLimit);
   req.offset = offset;
-  next();
+  return next();
 };
 
 exports.paginatorQueryParamsDocs = [
