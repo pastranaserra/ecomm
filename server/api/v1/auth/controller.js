@@ -3,7 +3,7 @@ const {
   jwt: { secret: jwtSecret, expiresIn: jwtExpiresIn },
 } = require('../../../../config');
 const { UnauthorizedErrorResponse } = require('../../../responses');
-const { User } = require('../users');
+const { User } = require('../users/entity');
 
 exports.signUp = async (req, res, next) => {
   try {

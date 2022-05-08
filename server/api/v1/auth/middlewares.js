@@ -9,7 +9,7 @@ const {
   ForbiddenErrorResponse,
   InternalServerErrorResponse,
 } = require('../../../responses');
-const { User } = require('../users');
+const { User } = require('../users/entity');
 
 const bearerPrefix = 'Bearer ';
 
