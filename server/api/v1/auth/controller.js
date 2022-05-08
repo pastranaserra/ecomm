@@ -2,6 +2,7 @@ const { sign } = require('jsonwebtoken');
 const {
   jwt: { secret: jwtSecret, expiresIn: jwtExpiresIn },
 } = require('../../../../config');
+const { UnauthorizedErrorResponse } = require('../../../responses');
 const { User } = require('../users');
 
 exports.signUp = async (req, res, next) => {
@@ -17,10 +18,7 @@ exports.signUp = async (req, res, next) => {
 
 exports.logIn = async (req, res, next) => {
   try {
-    const invalidCredsError = {
-      statusCode: 401,
-      message: 'Invalid credentials',
-    };
+    const invalidCredsError = UnauthorizedErrorResponse('Invalid credentials');
     const { email = '', password = '' } = req.body;
     const userDoc = await User.findOne({ email });
     if (!userDoc) return next(invalidCredsError);
