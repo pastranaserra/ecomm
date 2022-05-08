@@ -5,7 +5,7 @@ const { User } = require('./entity');
 exports.listUsers = async (req, res, next) => {
   try {
     const { limit, offset } = req;
-    if (!limit || !offset) {
+    if (Number.isNaN(limit) || Number.isNaN(offset)) {
       logger.error(
         `
 Implementation error:
