@@ -36,30 +36,28 @@ exports.paginator = (req, _, next) => {
   next();
 };
 
-exports.paginatorQueryParamsDocs = {
-  limitQueryParam: {
+exports.paginatorQueryParamsDocs = [
+  {
     in: 'query',
     name: 'limit',
     description: 'Number of items to return',
     required: false,
     schema: {
       type: 'integer',
-      format: 'int32',
       minimum: minLimit,
       maximum: maxLimit,
       default: defaultLimit,
     },
   },
-  offsetQueryParam: {
+  {
     in: 'query',
     name: 'offset',
     description: 'Number of items to skip',
     required: false,
     schema: {
       type: 'integer',
-      format: 'int32',
       minimum: minOffset,
       default: defaultOffset,
     },
   },
-};
+];
