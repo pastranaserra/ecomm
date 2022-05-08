@@ -1,14 +1,19 @@
 const logger = require('../../logger');
 const { logErrorOnRequest } = require('../logger');
+const {
+  NotFoundErrorResponse,
+  InternalServerErrorResponse,
+} = require('../responses');
 
-const notFoundMiddleware = (_, __, next) => {
-  next({ statusCode: 404, message: 'Not Found' });
-};
+const notFoundMiddleware = (_, __, next) => next(NotFoundErrorResponse());
 
 const fallbackErrorMiddleware = (err, _, __, next) => {
-  logger.info(`Fallback error middleware: ${err}`);
-  const { statusCode = 500, message = 'Internal Server Error' } = err;
-  next({ statusCode, message });
+  logger.error(`
+Fallback error middleware:
+${err}
+`);
+  const errRes = { ...InternalServerErrorResponse(), ...err };
+  next({ statusCode: errRes.statusCode, message: errRes.message });
 };
 
 const errorLoggerMiddleware = (err, req, __, next) => {
