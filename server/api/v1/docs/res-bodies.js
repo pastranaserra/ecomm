@@ -32,6 +32,13 @@ exports.simpleUnauthorizedResBodyDoc = (description) => ({
 exports.defaultUnauthorizedResBodyDoc =
   this.simpleUnauthorizedResBodyDoc('Unauthorized');
 
+exports.simpleForbiddenResBodyDoc = (description) => ({
+  403: { description },
+});
+
+exports.defaultForbiddenResBodyDoc =
+  this.simpleForbiddenResBodyDoc('Forbidden');
+
 exports.fallbackInternalServerErrorResBodyDoc = {
   500: {
     description: 'Unexpected error',
