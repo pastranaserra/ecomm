@@ -1,15 +1,12 @@
-exports.simpleOkResBodyDoc = (description, bodySchemaRef) => ({
+exports.okResBodyDoc = (description, schema) => ({
   200: {
     description,
-    content: {
-      'application/json': {
-        schema: {
-          $ref: bodySchemaRef,
-        },
-      },
-    },
+    content: { 'application/json': { schema } },
   },
 });
+
+exports.simpleOkResBodyDoc = (description, schemaRef) =>
+  this.okResBodyDoc(description, { $ref: schemaRef });
 
 exports.createdResBodyDoc = (description, schema) => ({
   201: {
@@ -20,6 +17,13 @@ exports.createdResBodyDoc = (description, schema) => ({
 
 exports.simpleCreatedResBodyDoc = (description, schemaRef) =>
   this.createdResBodyDoc(description, { $ref: schemaRef });
+
+exports.simpleBadRequestResBodyDoc = (description) => ({
+  400: { description },
+});
+
+exports.defaultBadRequestResBodyDoc =
+  this.simpleBadRequestResBodyDoc('Bad request');
 
 exports.simpleUnauthorizedResBodyDoc = (description) => ({
   401: { description },
