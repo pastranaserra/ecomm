@@ -8,11 +8,12 @@ const {
 const notFoundMiddleware = (_, __, next) => next(NotFoundErrorResponse());
 
 const fallbackErrorMiddleware = (err, _, __, next) => {
+  const errRes = { ...InternalServerErrorResponse(), ...err };
+  const errStr = JSON.stringify(errRes);
   logger.error(`
 Fallback error middleware:
-${err}
+${errStr}
 `);
-  const errRes = { ...InternalServerErrorResponse(), ...err };
   next({ statusCode: errRes.statusCode, message: errRes.message });
 };
 
