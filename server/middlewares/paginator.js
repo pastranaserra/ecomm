@@ -1,3 +1,5 @@
+const { BadRequestErrorResponse } = require('../responses');
+
 const defaultLimit = 10;
 const minLimit = 1;
 const maxLimit = 100;
@@ -15,47 +17,46 @@ exports.paginator = (req, _, next) => {
   const limitIsValid = !Number.isNaN(limit) && limit >= minLimit;
   const offsetIsValid = !Number.isNaN(offset) && offset >= minOffset;
   if (!limitIsValid || !offsetIsValid) {
-    const baseErrorMsg = 'Bad request: Invalid pagination parameters';
+    const baseErrorMsg = 'Invalid pagination parameters';
     const invalidLimitMsg = limitIsValid
       ? ''
       : ' `limit` must be a positive integer.';
     const invalidOffsetMsg = offsetIsValid
       ? ''
       : ' `offset` must be an integer greater than or equal to 0.';
-    next({
-      statusCode: 400,
-      message: `${baseErrorMsg}${invalidLimitMsg}${invalidOffsetMsg}`,
-    });
+    return next(
+      BadRequestErrorResponse(
+        `${baseErrorMsg}${invalidLimitMsg}${invalidOffsetMsg}`,
+      ),
+    );
   }
   req.limit = Math.min(limit, maxLimit);
   req.offset = offset;
-  next();
+  return next();
 };
 
-exports.paginatorQueryParamsDocs = {
-  limitQueryParam: {
+exports.paginatorQueryParamsDocs = [
+  {
     in: 'query',
     name: 'limit',
     description: 'Number of items to return',
     required: false,
     schema: {
       type: 'integer',
-      format: 'int32',
       minimum: minLimit,
       maximum: maxLimit,
       default: defaultLimit,
     },
   },
-  offsetQueryParam: {
+  {
     in: 'query',
     name: 'offset',
     description: 'Number of items to skip',
     required: false,
     schema: {
       type: 'integer',
-      format: 'int32',
       minimum: minOffset,
       default: defaultOffset,
     },
   },
-};
+];
