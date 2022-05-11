@@ -1,3 +1,5 @@
+const { BadRequestErrorResponse } = require('../../../responses');
+
 const userCart = [];
 
 exports.isEmpty = (req, res, next) => {
@@ -30,9 +32,7 @@ exports.modify = (req, res) => {
       Object.assign(userCart[i], req.body);
       res.json(userCart[i]);
     } else {
-      res.json({
-        message: 'This item is not in your shopping cart',
-      });
+      res.json(BadRequestErrorResponse('This item is not in your cart'));
     }
   }
 };
@@ -43,9 +43,7 @@ exports.remove = (req, res) => {
     if (userCart[i].id === id) {
       userCart.splice(i, 1);
     } else {
-      return res.json({
-        message: 'This item is not in your shopping cart',
-      });
+      return res.json(BadRequestErrorResponse('This item is not in your cart'));
     }
   }
   return res.json({
