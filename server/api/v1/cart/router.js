@@ -2,7 +2,8 @@ const express = require('express');
 
 const router = express.Router();
 
-const { add, read, modify, remove, isEmpty } = require('./controller');
+const { add, read, modify, remove } = require('./controller');
+const { isEmpty } = require('./middlewares');
 
 router
   .route('/')

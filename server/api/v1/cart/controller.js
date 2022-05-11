@@ -2,15 +2,6 @@ const { BadRequestErrorResponse } = require('../../../responses');
 
 const userCart = [];
 
-exports.isEmpty = (req, res, next) => {
-  if (userCart.length === 0) {
-    res.json({
-      message: 'Your shopping cart is empty',
-    });
-  }
-  next();
-};
-
 exports.add = (req, res) => {
   userCart.push(req.body);
   res.json({
@@ -50,3 +41,5 @@ exports.remove = (req, res) => {
     'Shopping Cart': userCart,
   });
 };
+
+module.exports = { userCart };
