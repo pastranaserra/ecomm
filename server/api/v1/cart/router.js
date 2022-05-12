@@ -7,6 +7,7 @@ const { isEmpty } = require('./middlewares');
 
 router
   .route('/')
+  .use() // for using session?
   .post(add)
   .get(isEmpty, read)
   .put(isEmpty, modify)

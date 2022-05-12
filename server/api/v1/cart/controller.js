@@ -1,12 +1,21 @@
-const { BadRequestErrorResponse } = require('../../../responses');
+const { Model } = require('./productModel');
+const { NotFoundErrorResponse } = require('../../../responses');
 
-const userCart = [];
+const userCart = []; // create session and userCart database
 
-exports.add = (req, res) => {
-  userCart.push(req.body);
-  res.json({
-    'Shopping Cart': userCart,
-  });
+exports.add = async (req, res) => {
+  const { _id: productId } = req.body;
+  try {
+    const product = await Model.findById(productId);
+    if (product) {
+      userCart.push(product); // save user cart in the model--> userCart.save()
+      res.json({
+        'Shopping Cart': userCart,
+      });
+    }
+  } catch (error) {
+    res.json(NotFoundErrorResponse("The product doesn't exist"));
+  }
 };
 
 exports.read = (req, res) => {
@@ -16,25 +25,27 @@ exports.read = (req, res) => {
 };
 
 exports.modify = (req, res) => {
-  const { id } = req.body;
+  // not ready
+  const { _id: productId } = req.body;
 
   for (let i = 0; i < userCart.length; i += 1) {
-    if (userCart[i].id === id) {
+    if (userCart[i].id === productId) {
       Object.assign(userCart[i], req.body);
       res.json(userCart[i]);
     } else {
-      res.json(BadRequestErrorResponse('This item is not in your cart'));
+      res.json(NotFoundErrorResponse("The product doesn't exist"));
     }
   }
 };
 
 exports.remove = (req, res) => {
-  const { id } = req.body;
+  const { _id: productId } = req.body;
+
   for (let i = 0; i < userCart.length; i += 1) {
-    if (userCart[i].id === id) {
-      userCart.splice(i, 1);
+    if (userCart[i].id === productId) {
+      userCart.splice(i, 1); // save result in model--> userCart.splice().save()
     } else {
-      return res.json(BadRequestErrorResponse('This item is not in your cart'));
+      return res.json(NotFoundErrorResponse("The product doesn't exist"));
     }
   }
   return res.json({
