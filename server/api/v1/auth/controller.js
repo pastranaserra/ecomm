@@ -4,6 +4,7 @@ const {
 } = require('../../../../config');
 const { UnauthorizedErrorResponse } = require('../../../responses');
 const { User } = require('../users/entity');
+const { userCart } = require('../cart/controller');
 
 exports.signUp = async (req, res, next) => {
   try {
@@ -20,12 +21,27 @@ exports.logIn = async (req, res, next) => {
   try {
     const invalidCredsError = UnauthorizedErrorResponse('Invalid credentials');
     const { email = '', password = '' } = req.body;
+    const { session } = req; // sets the session
     const userDoc = await User.findOne({ email });
     if (!userDoc) return next(invalidCredsError);
     const isPasswordValid = await userDoc.verifyPassword(password);
     if (!isPasswordValid) return next(invalidCredsError);
     const { _id: userId } = userDoc;
     const jwt = sign({ id: userId }, jwtSecret, { expiresIn: jwtExpiresIn });
+    await session.regenerate((err) => {
+      if (err) next(err); // regenerate session as a good practice (?)
+    });
+    if (!session.user) {
+      session.user = userId; // sets the user name in the session
+      session.cart = userCart; // sets the user shopping cart in the session
+      await session.save((err) => {
+        // saving the session
+        if (err) {
+          next(err);
+        }
+      });
+      console.log(session); // to test the session creation
+    }
     return res.status(200).json({ ...userDoc.toJSON(), jwt });
   } catch (err) {
     return next(err);

@@ -1,4 +1,5 @@
 const express = require('express');
+const { me } = require('../auth/middlewares');
 
 const router = express.Router();
 
@@ -7,10 +8,9 @@ const { isEmpty } = require('./middlewares');
 
 router
   .route('/')
-  .use() // for using session?
-  .post(add)
-  .get(isEmpty, read)
-  .put(isEmpty, modify)
-  .delete(isEmpty, remove);
+  .post(me, add) // session before CRUD or for each CRUD action?
+  .get(me, isEmpty, read)
+  .put(me, isEmpty, modify)
+  .delete(me, isEmpty, remove);
 
 module.exports = router;

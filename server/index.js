@@ -1,5 +1,6 @@
 const express = require('express');
 const cors = require('cors');
+const { sessions, session } = require('./session');
 
 const apiV1 = require('./api/v1');
 const { reqIdSetter, reqLogger, errorHandlers } = require('./middlewares');
@@ -17,6 +18,8 @@ app.use(reqIdSetter);
 
 // Log every request.
 app.use(reqLogger);
+
+app.use(sessions(session));
 
 // Plug API routes into the app.
 // Using the V1 implementation as default.
