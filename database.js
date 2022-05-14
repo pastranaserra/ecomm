@@ -19,7 +19,6 @@ exports.connect = ({
   password = '',
 }) => {
   let dbUrl = '';
-
   if (!username || !password) {
     dbUrl = `${protocol}://${url}`;
   } else {
