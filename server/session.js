@@ -8,7 +8,7 @@ const session = {
   saveUninitialized: true,
   cookie: {
     secure: true,
-    maxAge: 1000 * 60 * 60 * 24, // one day
+    maxAge: 1000 * 60 * 20, // 20 min
   },
   store: MongoStore.create({
     mongoUrl: `${database.protocol}://${database.url}`,

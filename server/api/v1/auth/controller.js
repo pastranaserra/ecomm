@@ -4,6 +4,7 @@ const {
 } = require('../../../../config');
 const { UnauthorizedErrorResponse } = require('../../../responses');
 const { User } = require('../users/entity');
+const { defaultCart: cart } = require('../cart/cart');
 
 exports.signUp = async (req, res, next) => {
   try {
@@ -30,9 +31,10 @@ exports.logIn = async (req, res, next) => {
     await session.regenerate((err) => {
       if (err) next(err); // regenerate session as a good practice (?)
     });
-    if (!session.user) {
-      session.user = userId; // sets the user name in the session
-      session.cart = {}; // sets the user shopping cart in the session
+    if (!session.user && !session.cart) {
+      session.userId = userId; // sets the user _id in the session
+      session.userName = userDoc.name; // sets the user name in the session
+      session.cart = cart; // sets the user shopping cart in the session
       await session.save((err) => {
         // saving the session
         if (err) {

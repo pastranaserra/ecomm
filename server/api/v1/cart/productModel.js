@@ -25,6 +25,6 @@ const fields = {
   },
 };
 
-const products = new Schema(fields);
+const products = new Schema(fields, { timestamps: true });
 
 module.exports = { Products: mongoose.model('products', products) };
