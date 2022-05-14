@@ -1,8 +1,8 @@
 const sessions = require('express-session');
-const { reqIdSetter } = require('./middlewares/req-id-setter');
+const MongoStore = require('connect-mongo');
+const { mongoose } = require('mongoose');
 
 const session = {
-  id: reqIdSetter(), // use UUIDs for session IDs
   secret: 'keyboard cat',
   resave: false,
   saveUninitialized: true,
@@ -10,6 +10,7 @@ const session = {
     secure: true,
     maxAge: 1000 * 60 * 60 * 24, // one day
   },
+  store: MongoStore.create({ mongooseConnection: mongoose.connection }),
 };
 
 module.exports = {

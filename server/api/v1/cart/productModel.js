@@ -27,4 +27,4 @@ const fields = {
 
 const products = new Schema(fields);
 
-module.exports = { Model: mongoose.model('products', products) };
+module.exports = { Products: mongoose.model('products', products) };

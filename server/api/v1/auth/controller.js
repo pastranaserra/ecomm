@@ -4,7 +4,6 @@ const {
 } = require('../../../../config');
 const { UnauthorizedErrorResponse } = require('../../../responses');
 const { User } = require('../users/entity');
-const { userCart } = require('../cart/controller');
 
 exports.signUp = async (req, res, next) => {
   try {
@@ -33,7 +32,7 @@ exports.logIn = async (req, res, next) => {
     });
     if (!session.user) {
       session.user = userId; // sets the user name in the session
-      session.cart = userCart; // sets the user shopping cart in the session
+      session.cart = {}; // sets the user shopping cart in the session
       await session.save((err) => {
         // saving the session
         if (err) {
