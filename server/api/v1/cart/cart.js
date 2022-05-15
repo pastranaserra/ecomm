@@ -4,14 +4,10 @@ const defaultCart = {
   totalPrice: 0,
 };
 
-function Cart(oldCart) {
-  this.items = oldCart.items || []; // array of objects
+function Cart(items) {
+  this.items = items || []; // array of objects
   this.totalQtty = this.items.length;
-  this.totalPrice = function totalPrice() {
-    const ttlPrice = 0;
-    this.items.foreach((item) => (ttlPrice += item.price));
-    return ttlPrice;
-  };
+  this.totalPrice = totalPrice();
 }
 // this.add = function add(item, id) {
 //   for (let index = 0; index < this.items.length; index + 1) {

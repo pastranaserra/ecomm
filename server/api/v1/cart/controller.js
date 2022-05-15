@@ -1,23 +1,27 @@
-const session = require('express-session');
-const {
-  InternalServerErrorResponse,
-  NotFoundErrorResponse,
-} = require('../../../responses');
+// const session = require('express-session');
+const { NotFoundErrorResponse } = require('../../../responses');
 const { Products } = require('./productModel');
 const { Cart } = require('./cart');
 
 exports.add = async (req, res, next) => {
   const { _id: productId } = req.body;
   const { cart: oldCart } = req.session;
-  const newCart = new Cart(oldCart);
-  console.log(newCart);
   try {
     const product = await Products.findById(productId);
     console.log(product);
     if (product) {
-      newCart.items.push(product); // Cart add function
-      req.session.cart = newCart; // updates the session
-      console.log(req.session.cart); // to test session
+      oldCart.items.push(product); // Cart add function
+      oldCart.totalQtty = oldCart.items.length;
+      oldCart.totalPrice = 50;
+      // (function totalPrice() {
+      //   let ttlPrice = 0;
+      //   oldCart.items.forEach((item) => {
+      //     ttlPrice += item.price;
+      //   });
+      //   return ttlPrice;
+      // })();
+      req.session.cart = oldCart; // updates the session
+      console.log(req.session.cart); // to test new session
       res.json({
         'Shopping Cart': req.session.cart,
       });
@@ -32,7 +36,7 @@ exports.add = async (req, res, next) => {
 exports.read = (req, res) => {
   const { cart } = req.session;
   res.json({
-    'Shopping Cart': cart,
+    'Your Cart': cart,
   });
 };
 
