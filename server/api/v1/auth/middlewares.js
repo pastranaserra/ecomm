@@ -13,6 +13,15 @@ const { User } = require('../users/entity');
 
 const bearerPrefix = 'Bearer ';
 
+// validating isAuth from session?
+// exports.isAuth = (req, res, next) => {
+//   if (req.session.isAuth) {
+//     next();
+//   } else {
+//     res.json(UnauthorizedErrorResponse());
+//   }
+// };
+
 exports.me = async (req, _, next) => {
   try {
     const { headers = {} } = req;

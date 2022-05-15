@@ -32,7 +32,7 @@ exports.logIn = async (req, res, next) => {
     if (!session.user && !session.cart) {
       session.user = userDoc.name; // sets the user _id in the session
       session.cart = cart; // sets the user shopping cart in the session
-      console.log(session.cart);
+      session.isAuth = true; // to validate isAuth for authenticated requests
       console.log('Session Created');
     }
     return res.status(200).json({ ...userDoc.toJSON(), jwt, session });
@@ -42,3 +42,8 @@ exports.logIn = async (req, res, next) => {
 };
 
 exports.getProfile = (req, res) => res.status(200).json(req.me);
+
+exports.logOut = (req, res) => {
+  req.session = null;
+  res.json('Good bye!');
+};
