@@ -1,30 +1,29 @@
 // const session = require('express-session');
 const {
   NotFoundErrorResponse,
-  InternalServerErrorResponse,
+  BadRequestErrorResponse,
 } = require('../../../responses');
 const { Products } = require('./productModel');
 const { Cart } = require('./cart');
-const { ttlPrice } = require('./middlewares');
 
 exports.add = async (req, res) => {
   const { _id: productId } = req.body;
   const { cart } = req.session;
-  const newCart = cart;
+
+  const newCart = new Cart(cart.items);
   try {
     const product = await Products.findById(productId);
     if (product) {
-      newCart.items.push(product); // Cart add function
-      newCart.totalQtty = newCart.items.length;
-      newCart.totalPrice = ttlPrice(newCart.items);
-      req.session.cart = newCart; // updates the session
-      // console.log(req.session.cart); // to test new session
+      newCart.add(product);
+      req.session.cart = newCart;
       res.json({
         'Shopping Cart': req.session.cart,
       });
+    } else {
+      res.json(NotFoundErrorResponse(`The ${productId} product doesn't exist`));
     }
   } catch (error) {
-    res.json(NotFoundErrorResponse("This item doesn't exist"));
+    res.json(BadRequestErrorResponse(`${error}`));
   }
 };
 
@@ -36,25 +35,25 @@ exports.read = (req, res) => {
 };
 
 exports.remove = async (req, res) => {
-  const { _id: productId } = req.body;
-  // const { cart } = req.session;
-  const { items } = req.session.cart;
-
-  for (let i = 0; i < items.length; i += 1) {
-    const { _id: itemId } = items[i];
-    if (itemId === productId) {
-      items.splice(i, 1);
-    } else {
-      return res.json(
-        NotFoundErrorResponse('This product is not in your cart'),
-      );
-    }
-  }
-  req.session.cart.items = items;
-  req.session.cart.totalQtty = items.length;
-  req.session.cart.totalPrice = ttlPrice(items);
-
-  return res.json({
-    'Shopping Cart': req.session.cart,
+  const { _id: id } = req.body;
+  const { cart } = req.session;
+  const product = cart.items.find((element) => {
+    const { _id: productId } = element.item;
+    return productId === id;
   });
+
+  if (product) {
+    const newCart = new Cart(cart.items);
+    newCart.remove(product);
+    req.session.cart = newCart;
+    if (newCart.totalQtty === 0) {
+      return res.json(NotFoundErrorResponse('Your shopiing cart is empty now'));
+    }
+    return res.json({
+      'Shopping Cart': req.session.cart,
+    });
+  }
+  return res.json(
+    BadRequestErrorResponse(`the ${id} product is not in your shopping cart`),
+  );
 };

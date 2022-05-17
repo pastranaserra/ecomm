@@ -7,11 +7,3 @@ exports.isEmpty = (req, res, next) => {
   }
   next();
 };
-
-exports.ttlPrice = function totalPrice(itemsList) {
-  let finalPrice = 0;
-  itemsList.forEach((item) => {
-    finalPrice += item.price;
-  });
-  return finalPrice;
-};

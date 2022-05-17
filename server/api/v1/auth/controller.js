@@ -4,7 +4,7 @@ const {
 } = require('../../../../config');
 const { UnauthorizedErrorResponse } = require('../../../responses');
 const { User } = require('../users/entity');
-const { defaultCart: cart } = require('../cart/cart');
+const { Cart } = require('../cart/cart');
 
 exports.signUp = async (req, res, next) => {
   try {
@@ -31,7 +31,7 @@ exports.logIn = async (req, res, next) => {
 
     if (!session.user && !session.cart) {
       session.user = userDoc.name; // sets the user _id in the session
-      session.cart = cart; // sets the user shopping cart in the session
+      session.cart = new Cart(); // sets the user shopping cart in the session
       session.isAuth = true; // to validate isAuth for authenticated requests
       console.log('Session Created');
     }
