@@ -1,4 +1,8 @@
-const { BadRequestErrorResponse } = require('../responses');
+const logger = require('../../logger');
+const {
+  BadRequestErrorResponse,
+  InternalServerErrorResponse,
+} = require('../responses');
 
 const defaultLimit = 10;
 const minLimit = 1;
@@ -60,3 +64,17 @@ exports.paginatorQueryParamsDocs = [
     },
   },
 ];
+
+function getPaginationParams(req) {
+  const { limit, offset } = req;
+  if (Number.isNaN(limit) || Number.isNaN(offset)) {
+    logger.error(
+      `
+Implementation error:
+The 'paginator' middleware must be used before retrieving pagination parameters.`,
+    );
+    throw InternalServerErrorResponse();
+  }
+  return { limit, offset };
+}
+exports.getPaginationParams = getPaginationParams;
